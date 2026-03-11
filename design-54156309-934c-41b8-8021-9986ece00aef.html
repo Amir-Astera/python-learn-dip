@@ -1,0 +1,722 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Teacher Dashboard - Python Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            
+            --bg-body: #F9FAFB; 
+            --bg-card: #FFFFFF;
+            --bg-hover: #F3F4F6;
+            --bg-subtle: #F9FAFB;
+            
+            --text-primary: #111827; 
+            --text-secondary: #6B7280; 
+            --text-tertiary: #9CA3AF;
+            
+            --border-subtle: #E5E7EB; 
+            --border-focus: #D1D5DB;
+
+            --accent-purple: #6366F1; 
+            --accent-purple-light: #EEF2FF;
+            
+            --radius-card: 16px; 
+            --radius-button: 8px; 
+            --radius-pill: 99px;
+            
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-float: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-base { font-size: 1rem; }
+        
+        .font-medium { font-weight: 500; }
+        .font-regular { font-weight: 400; }
+        
+        .text-secondary { color: var(--text-secondary); }
+        .text-primary { color: var(--text-primary); }
+
+        
+        svg {
+            display: block;
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 240px 1fr; 
+            height: 100%;
+        }
+
+        
+        .sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-subtle);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .logo-area {
+            padding: 0 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-label {
+            padding: 0 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-button);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        
+        .main-content {
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+        }
+
+        .page-title h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: var(--radius-button);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        
+        .btn-secondary {
+            background: #fff;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        
+        .btn-primary {
+            background: var(--text-primary);
+            color: #fff;
+            border: 1px solid var(--text-primary);
+        }
+        
+        .btn-primary:hover {
+            background: #2D3748;
+        }
+
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+        }
+
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 0; 
+        }
+        
+        .card-body-padded {
+            padding: 24px;
+        }
+
+        
+        .metric-card {
+            grid-column: span 4;
+            padding: 24px;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .metric-trend {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .trend-up {
+            color: #059669;
+            background: #ECFDF5;
+        }
+
+        
+        .list-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background-color 0.15s ease;
+            cursor: pointer;
+            gap: 16px;
+        }
+
+        .list-row:last-child {
+            border-bottom: none;
+        }
+
+        .list-row:hover {
+            background-color: var(--bg-hover); 
+        }
+        
+        .list-row-content {
+            flex: 1;
+        }
+
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #E0E7FF;
+            color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info h4 {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .user-info p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        
+        .progress-wrapper {
+            width: 100px;
+            text-align: right;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: var(--bg-hover);
+            border-radius: var(--radius-pill);
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-purple);
+            border-radius: var(--radius-pill);
+        }
+        
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        
+        .section-roster {
+            grid-column: span 8;
+        }
+
+        .section-feed {
+            grid-column: span 4;
+        }
+
+        .section-analytics {
+            grid-column: span 12;
+            height: 300px;
+        }
+        
+        
+        .feed-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .feed-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        
+        .feed-content {
+            font-size: 0.875rem;
+        }
+        
+        .feed-content span {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .feed-time {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 24px;
+        }
+        
+        .bar {
+            flex: 1;
+            background: var(--bg-hover);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: height 0.3s ease;
+        }
+        
+        .bar.active {
+            background: var(--accent-purple);
+        }
+        
+        .bar:hover {
+            opacity: 0.9;
+        }
+
+        
+        .dashboard-footer {
+            margin-top: 40px;
+            border-top: 1px solid var(--border-subtle);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            .metric-card, .section-roster, .section-feed, .section-analytics {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <div class="app-container" vid="10">
+        
+        <aside class="sidebar" vid="11">
+            <div class="logo-area" vid="12">
+                <div class="avatar" style="background: var(--text-primary); color: white;" vid="13">Py</div>
+                <span vid="14">PyLearn Admin</span>
+            </div>
+
+            <nav class="nav-section" vid="15">
+                <div class="nav-label" vid="16">Overview</div>
+                <a href="#" class="nav-item active" vid="17">
+                    <svg viewBox="0 0 24 24" vid="18"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" vid="19"></path></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" vid="20">
+                    <svg viewBox="0 0 24 24" vid="21"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" vid="22"></path></svg>
+                    Courses
+                </a>
+                <a href="#" class="nav-item" vid="23">
+                    <svg viewBox="0 0 24 24" vid="24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" vid="25"></path></svg>
+                    Students
+                </a>
+            </nav>
+
+            <nav class="nav-section" vid="26">
+                <div class="nav-label" vid="27">Management</div>
+                <a href="#" class="nav-item" vid="28">
+                    <svg viewBox="0 0 24 24" vid="29"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" vid="30"></path></svg>
+                    Assignments
+                </a>
+                <a href="#" class="nav-item" vid="31">
+                    <svg viewBox="0 0 24 24" vid="32"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" vid="33"></path></svg>
+                    Analytics
+                </a>
+            </nav>
+            
+            <div style="flex-grow: 1;" vid="34"></div>
+            
+            
+            <div class="nav-item" style="border-top: 1px solid var(--border-subtle); padding-top: 16px; margin-top: auto;" vid="35">
+                <div class="avatar" style="width: 24px; height: 24px; font-size: 10px;" vid="36">AZ</div>
+                <span style="font-size: 0.8125rem;" vid="37">Amir Zhakupov</span>
+            </div>
+        </aside>
+
+        <main class="main-content" vid="38">
+            <header class="header-actions" vid="39">
+                <div class="page-title" vid="40">
+                    <div class="text-secondary text-sm font-medium mb-1" vid="41">Introduction to Python</div>
+                    <h1 vid="42">Class Dashboard</h1>
+                </div>
+                <div style="display: flex; gap: 12px;" vid="43">
+                    <button class="btn btn-secondary" vid="44">
+                        <svg viewBox="0 0 24 24" vid="45"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" vid="46"></path></svg>
+                        Export Data
+                    </button>
+                    <button class="btn btn-primary" vid="47">
+                        <svg viewBox="0 0 24 24" style="fill: white;" vid="48"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" vid="49"></path></svg>
+                        New Assignment
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-grid" vid="50">
+                
+                <div class="card metric-card" vid="51">
+                    <div class="metric-label" vid="52">
+                        Total Students
+                        <span class="metric-trend trend-up" vid="53">+12%</span>
+                    </div>
+                    <div class="metric-value" vid="54">142</div>
+                </div>
+
+                <div class="card metric-card" vid="55">
+                    <div class="metric-label" vid="56">
+                        Avg. Completion
+                        <span class="metric-trend" vid="57">Stable</span>
+                    </div>
+                    <div class="metric-value" vid="58">78%</div>
+                </div>
+
+                <div class="card metric-card" vid="59">
+                    <div class="metric-label" vid="60">
+                        Submissions (Today)
+                    </div>
+                    <div class="metric-value" vid="61">34</div>
+                </div>
+
+                
+                <div class="card section-roster" vid="62">
+                    <div class="card-header" vid="63">
+                        <h3 vid="64">Student Progress</h3>
+                        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" vid="65">View All</button>
+                    </div>
+                    <div class="card-body" vid="66">
+                        
+                        <div class="list-row" vid="67">
+                            <div class="avatar" vid="68">
+                                <img src="https://i.pravatar.cc/150?u=1" alt="User" vid="69">
+                            </div>
+                            <div class="list-row-content user-info" vid="70">
+                                <h4 vid="71">Aslan Dualtov</h4>
+                                <p vid="72">aslan.d@student.edu</p>
+                            </div>
+                            <div class="progress-wrapper" vid="73">
+                                <span class="progress-label" vid="74">92%</span>
+                                <div class="progress-track" vid="75">
+                                    <div class="progress-fill" style="width: 92%;" vid="76"></div>
+                                </div>
+                            </div>
+                            <div style="color: var(--text-tertiary);" vid="77">
+                                <svg viewBox="0 0 24 24" vid="78"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" vid="79"></path></svg>
+                            </div>
+                        </div>
+
+                        
+                        <div class="list-row" vid="80">
+                            <div class="avatar" style="background: #FEF3C7; color: #D97706;" vid="81">
+                                JL
+                            </div>
+                            <div class="list-row-content user-info" vid="82">
+                                <h4 vid="83">Almas Zhasulanov</h4>
+                                <p vid="84">almas.zh@student.edu</p>
+                            </div>
+                            <div class="progress-wrapper" vid="85">
+                                <span class="progress-label" vid="86">75%</span>
+                                <div class="progress-track" vid="87">
+                                    <div class="progress-fill" style="width: 75%; background-color: #F59E0B;" vid="88"></div>
+                                </div>
+                            </div>
+                            <div style="color: var(--text-tertiary);" vid="89">
+                                <svg viewBox="0 0 24 24" vid="90"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" vid="91"></path></svg>
+                            </div>
+                        </div>
+
+                        
+                        <div class="list-row" vid="92">
+                            <div class="avatar" style="background: #ECFDF5; color: #059669;" vid="93">
+                                ED
+                            </div>
+                            <div class="list-row-content user-info" vid="94">
+                                <h4 vid="95">Arman Armanov</h4>
+                                <p vid="96">arman.a@student.edu</p>
+                            </div>
+                            <div class="progress-wrapper" vid="97">
+                                <span class="progress-label" vid="98">88%</span>
+                                <div class="progress-track" vid="99">
+                                    <div class="progress-fill" style="width: 88%;" vid="100"></div>
+                                </div>
+                            </div>
+                            <div style="color: var(--text-tertiary);" vid="101">
+                                <svg viewBox="0 0 24 24" vid="102"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" vid="103"></path></svg>
+                            </div>
+                        </div>
+
+                        
+                        <div class="list-row" vid="104">
+                            <div class="avatar" vid="105">
+                                <img src="https://i.pravatar.cc/150?u=4" alt="User" vid="106">
+                            </div>
+                            <div class="list-row-content user-info" vid="107">
+                                <h4 vid="108">Bekzat Asanov</h4>
+                                <p vid="109">bekzat.a@student.edu</p>
+                            </div>
+                            <div class="progress-wrapper" vid="110">
+                                <span class="progress-label" vid="111">64%</span>
+                                <div class="progress-track" vid="112">
+                                    <div class="progress-fill" style="width: 64%; background-color: #EF4444;" vid="113"></div>
+                                </div>
+                            </div>
+                            <div style="color: var(--text-tertiary);" vid="114">
+                                <svg viewBox="0 0 24 24" vid="115"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" vid="116"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="card section-feed" vid="117">
+                    <div class="card-header" vid="118">
+                        <h3 vid="119">Recent Activity</h3>
+                    </div>
+                    <div class="card-body" vid="120">
+                        <div class="feed-item" vid="121">
+                            <div class="feed-icon" vid="122">
+                                <svg viewBox="0 0 24 24" vid="123"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" vid="124"></path></svg>
+                            </div>
+                            <div class="feed-content" vid="125">
+                                <span vid="126">Aslan D.</span> submitted "Functions &amp; Loops"
+                                <span class="feed-time" vid="127">2 mins ago</span>
+                            </div>
+                        </div>
+                        <div class="feed-item" vid="128">
+                            <div class="feed-icon" vid="129">
+                                <svg viewBox="0 0 24 24" vid="130"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" vid="131"></path></svg>
+                            </div>
+                            <div class="feed-content" vid="132">
+                                <span vid="133">Almas Zh.</span> asked a question in "Variables"
+                                <span class="feed-time" vid="134">15 mins ago</span>
+                            </div>
+                        </div>
+                        <div class="feed-item" vid="135">
+                            <div class="feed-icon" vid="136">
+                                <svg viewBox="0 0 24 24" vid="137"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" vid="138"></path></svg>
+                            </div>
+                            <div class="feed-content" vid="139">
+                                <span vid="140">Bekzat A.</span> completed Module 3
+                                <span class="feed-time" vid="141">1 hour ago</span>
+                            </div>
+                        </div>
+                        <div class="feed-item" vid="142">
+                            <div class="feed-icon" vid="143">
+                                <svg viewBox="0 0 24 24" vid="144"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" vid="145"></path></svg>
+                            </div>
+                            <div class="feed-content" vid="146">
+                                <span vid="147">Arman A.</span> submitted "Arrays"
+                                <span class="feed-time" vid="148">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="card section-analytics" vid="149">
+                    <div class="card-header" vid="150">
+                        <h3 vid="151">Class Performance Trends</h3>
+                        <div style="display: flex; gap: 8px;" vid="152">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" vid="153">This Week</button>
+                        </div>
+                    </div>
+                    <div class="card-body-padded" style="height: 240px;" vid="154">
+                        <div class="chart-container" vid="155">
+                            <div class="bar" style="height: 40%" vid="156"></div>
+                            <div class="bar" style="height: 65%" vid="157"></div>
+                            <div class="bar" style="height: 55%" vid="158"></div>
+                            <div class="bar" style="height: 80%" vid="159"></div>
+                            <div class="bar active" style="height: 90%" vid="160"></div>
+                            <div class="bar" style="height: 70%" vid="161"></div>
+                            <div class="bar" style="height: 85%" vid="162"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- <div class="dashboard-footer" vid="163"> -->
+                <!-- Platform secured by Clerk <span class="status-badge" vid="164"></span> -->
+            <!-- </div> -->
+        </main>
+    </div>
+
+
+</body></html>
