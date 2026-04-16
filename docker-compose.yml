@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  # ─── PostgreSQL ──────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: pylearn_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       pylearn
+      POSTGRES_USER:     pylearn
+      POSTGRES_PASSWORD: pylearn_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pylearn -d pylearn"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ─── FastAPI Backend ──────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ../python-learn-dip-backend
+      dockerfile: Dockerfile
+    container_name: pylearn_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://pylearn:pylearn_secret@db:5432/pylearn
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_files:/app/static
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ─── React Frontend (vite preview) ───────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pylearn_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  static_files:

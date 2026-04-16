@@ -1,0 +1,74 @@
+# PyLearn — Запуск через Docker
+
+## Требования
+
+- Docker Desktop (или Docker Engine)
+- Оба репозитория лежат рядом в одной папке:
+
+```
+папка/
+├── python-learn-dip/           ← frontend (здесь же docker-compose.yml)
+└── python-learn-dip-backend/   ← backend
+```
+
+## Запуск
+
+### 1. Создать `.env`
+
+```bash
+cd python-learn-dip
+cp .env.example .env
+```
+
+Открыть `.env` и вставить свой `GEMINI_API_KEY`. Остальное можно не трогать.
+
+### 2. Поднять всё
+
+```bash
+docker compose up -d --build
+```
+
+Первый запуск занимает 2–3 минуты (скачивает образы, собирает frontend).
+
+При первом старте backend автоматически:
+1. Дождётся PostgreSQL
+2. Создаст таблицы и применит миграции
+3. Засеет базу тестовыми данными
+
+### 3. Открыть в браузере
+
+- **Приложение:** http://localhost:5173
+- **Backend API:** http://localhost:8000/api/v1
+
+## Логины по умолчанию
+
+| Роль    | Email                 | Пароль     |
+|---------|-----------------------|------------|
+| Admin   | admin@pylearn.com     | admin123   |
+| Teacher | teacher@pylearn.com   | teacher123 |
+| Teacher | marat@pylearn.com     | teacher123 |
+| Student | amir@student.com      | student123 |
+
+Инвайт-коды групп: `fall2025`, `spring2026`, `intro101`
+
+## Полезные команды
+
+```bash
+# Остановить
+docker compose down
+
+# Остановить и удалить базу данных (всё сначала)
+docker compose down -v
+
+# Пересобрать после изменений в коде
+docker compose up -d --build
+
+# Посмотреть логи backend
+docker compose logs -f backend
+
+# Зайти в контейнер backend
+docker compose exec backend sh
+
+# Принудительно пересеять базу
+docker compose exec backend python seed.py
+```
